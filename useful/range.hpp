@@ -44,8 +44,9 @@ namespace useful {
 	class const_reverse_adaptor {
 	public:
 		using container_type = typename std::add_const<Container>::type;
-		using const_iterator = typename Container::const_reverse_iterator;
-	
+		using const_iterator = typename container_type::const_reverse_iterator;
+		using value_type = typename container_type::value_type;
+		
 	private:
 		container_type &c;
 	
@@ -64,9 +65,10 @@ namespace useful {
 	class reverse_adaptor {
 	public:
 		using container_type = typename std::remove_const<Container>::type;
-		using iterator = typename Container::reverse_iterator;
-		using const_iterator = typename Container::const_reverse_iterator;
-	
+		using iterator = typename container_type::reverse_iterator;
+		using const_iterator = typename container_type::const_reverse_iterator;
+		using value_type = typename container_type::value_type;
+		
 	private:
 		container_type &c;
 	
@@ -96,14 +98,17 @@ namespace useful {
 	} 
 
 	/* Adaptors to iterate over all but the first N elements of a container.
-	 * for (auto i : drop(foo, 5)) skips the first five elements.
+	 *  for (auto i : drop(foo, 5)) skips the first five elements.
+	 * If N is negative, drops all but the last abs(N) elements
+	 *  for (auto i : drop(foo, -2)) iterates over only the last 2 elements.
 	*/
 	template<typename Container>
 	class const_drop_adaptor {
 	public:
 		using container_type = typename std::add_const<Container>::type;
-		using const_iterator = typename Container::const_iterator;
-		using difference_type = typename Container::difference_type;
+		using const_iterator = typename container_type::const_iterator;
+		using difference_type = typename container_type::difference_type;
+		using value_type = typename container_type::value_type;
 		
 	private:
 		container_type &c;
@@ -111,19 +116,18 @@ namespace useful {
 		
 	public:
 		explicit const_drop_adaptor(container_type &c_, difference_type n_)
-			: c(c_), n(n_) {}
+			: c(c_), n(n_) {
+				if (n < 0)
+					n = c.size() + n;
+			}
 	
-		const_iterator begin(void) const noexcept {
-			auto i = c.cbegin();
-			std::advance(i, n);
-			return i;
-		}
+		const_iterator begin(void) const noexcept { return cbegin(); }
 		const_iterator cbegin(void) const noexcept {
 			auto i = c.cbegin();
 			std::advance(i, n);
 			return i;
 		}
-		
+
 		const_iterator end(void) const noexcept { return c.cend(); }
 		const_iterator cend(void) const noexcept { return c.cend(); }
 	};
@@ -132,9 +136,10 @@ namespace useful {
 	class drop_adaptor {
 	public:
 		using container_type = typename std::remove_const<Container>::type;
-		using iterator = typename Container::iterator;
-		using const_iterator = typename Container::const_iterator;
-		using difference_type = typename Container::difference_type;
+		using iterator = typename container_type::iterator;
+		using const_iterator = typename container_type::const_iterator;
+		using difference_type = typename container_type::difference_type;
+		using value_type = typename container_type::value_type;
 		
 	private:
 		container_type &c;
@@ -142,18 +147,17 @@ namespace useful {
 	
 	public:
 		explicit drop_adaptor(container_type &c_, difference_type n_)
-			: c(c_), n(n_) {}
+			: c(c_), n(n_) {
+				if (n < 0)
+					n = c.size() + n;
+			}
 	
 		iterator begin(void) noexcept {
 			auto i = c.begin();
 			std::advance(i, n);
 			return i;
 		}
-		const_iterator begin(void) const noexcept {
-			auto i = c.cbegin();
-			std::advance(i, n);
-			return i;
-		}
+		const_iterator begin(void) const noexcept { return cbegin(); }
 		const_iterator cbegin(void) const noexcept {
 			auto i = c.cbegin();
 			std::advance(i, n);
@@ -186,57 +190,67 @@ namespace useful {
 	class const_take_adaptor {
 	public:
 		using container_type = typename std::add_const<Container>::type;
-		using const_iterator = typename Container::const_iterator;
-		using difference_type = typename Container::difference_type;
+		using const_iterator = typename container_type::const_iterator;
+		using difference_type = typename container_type::difference_type;
+		using value_type = typename container_type::value_type;
 		
 	private:
 		container_type &c;
-		const_iterator ce;
+		difference_type n;
 		
 	public:
 		explicit const_take_adaptor(container_type &c_, difference_type n_)
-			: c(c_), ce(c.cbegin()) { 
-				if (n_ < 0)
-					n_ = c.size() + n_;
-				std::advance(ce, n_);
-			}
+			: c(c_), n(n_) { 
+				if (n < 0)
+					n = c.size() + n;
+		}
 	
 		const_iterator begin(void) const noexcept { return c.cbegin(); }
 		const_iterator cbegin(void) const noexcept { return c.cbegin(); }
 		
-		const_iterator end(void) const noexcept { return ce; }
-		const_iterator cend(void) const noexcept { return ce; }
+		const_iterator end(void) const noexcept { return cend(); }
+		const_iterator cend(void) const noexcept {
+			auto i = c.cbegin();
+			std::advance(i, n);
+			return i;
+		}
 	};
 	
 	template<typename Container>
 	class take_adaptor {
 	public:
 		using container_type = typename std::remove_const<Container>::type;
-		using iterator = typename Container::iterator;
-		using const_iterator = typename Container::const_iterator;
-		using difference_type = typename Container::difference_type;
+		using iterator = typename container_type::iterator;
+		using const_iterator = typename container_type::const_iterator;
+		using difference_type = typename container_type::difference_type;
+		using value_type = typename container_type::value_type;
 		
 	private:
 		container_type &c;
-		iterator e;
-		const_iterator ce;
-		
+		difference_type n;
+	
 	public:
 		explicit take_adaptor(container_type &c_, difference_type n_)
-			: c(c_), e(c.begin()), ce(c.cbegin()) {
-				if (n_ < 0) 
-					n_ = c.size() + n_;
-				std::advance(e, n_);
-				std::advance(ce, n_);
-			}
+			: c(c_), n(n_) {
+				if (n < 0)
+					n = c.size() + n;
+		}
 	
 		iterator begin(void) noexcept { return c.begin(); }
 		const_iterator begin(void) const noexcept { return c.cbegin(); }
 		const_iterator cbegin(void) const noexcept { return c.cbegin(); }
 		
-		iterator end(void) noexcept { return e; }
-		const_iterator end(void) const noexcept { return ce; }
-		const_iterator cend(void) const noexcept { return ce; }
+		iterator end(void) noexcept { 
+			auto i = c.begin();
+			std::advance(i, n);
+			return i;
+		}
+		const_iterator end(void) const noexcept { return cend(); }
+		const_iterator cend(void) const noexcept { 
+			auto i = c.cbegin();
+			std::advance(i, n);
+			return i;
+		}
 	};
 	
 	template<typename Container,

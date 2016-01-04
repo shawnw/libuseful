@@ -33,6 +33,14 @@ int main(void) {
 		std::cout << i << ',';
 	std::cout << '\n';
 		
+	std::cout << "\nDrop -2:\n";
+	for (auto i : drop(cfoo, -2))
+		std::cout << i << ',';
+	std::cout << '\n';
+	for (auto i : drop(bar, -2))
+		std::cout << i << ',';
+	std::cout << '\n';
+	
 	std::cout << "\nTake 2:\n";
 	for (auto i : take(cfoo, 2))
 		std::cout << i << ',';
@@ -51,14 +59,7 @@ int main(void) {
 	for (auto i : take(bar, -2))
 		std::cout << i << ',';
 	std::cout << '\n';
-	
-	std::cout << "\nPretty:\n";
-	for (auto i : cfoo) 
-		std::cout << i << ", ";
-	for (auto i : take(bar, -1))
-		std::cout << i << ", ";
-	std::cout << bar.back() << '\n';
-	
+
 	return 0;
 }
 	
