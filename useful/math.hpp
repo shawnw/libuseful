@@ -27,10 +27,13 @@ SOFTWARE.
 
 namespace useful {
 
-	constexpr int factorial(int n) {
-		return n == 1 ? 1 : n * factorial(n - 1);
+	/* Returns the factorial of a number. */
+	template<typename T>
+	constexpr T factorial(T n) {
+		return n == 1 ? 1 : n * factorial<T>(n - 1);
 	}
 
+	/* Returns the sum of a range */
 	template<class InputIterator>
 	auto sum(InputIterator b, InputIterator e)
 		-> typename InputIterator::value_type {
@@ -38,10 +41,24 @@ namespace useful {
 			return std::accumulate(b, e, static_cast<t>(0));
 	}
 	
+	/* Returns the sum of a container */
+	template<class Container>
+	auto sum(const Container &c) -> typename Container::value_type {
+		return sum(c.cbegin(), c.cend());
+	}
+	
+	/* Returns the product of a range */
 	template<class InputIterator>
 	auto product(InputIterator b, InputIterator e)
 		-> typename InputIterator::value_type {
 			using t = typename InputIterator::value_type;
 			return std::accumulate(b, e, static_cast<t>(1), std::multiplies<t>());
 	}
+	
+	/* Returns the product of a container */
+	template<class Container>
+	auto product(const Container &c) -> typename Container::value_type {
+		return product(c.cbegin(), c.cend());
+	}
+	
 };

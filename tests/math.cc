@@ -20,5 +20,7 @@ int main(void) {
 	std::cout << "Sum of vector: " << sum(foo.begin(), foo.end()) << '\n';
 	std::cout << "Product of vector: " << product(foo.begin(), foo.end()) << '\n';
 	
+	std::cout << "Product of vector minus last element: " << product(take(foo, -1)) << '\n';
+	
 	return 0;
 }
