@@ -60,6 +60,9 @@ int main(void) {
 		std::cout << i << ',';
 	std::cout << '\n';
 
+	// Should fail to compile.
+	// auto baz = take_adaptor<const std::vector<int>>(cfoo, 1);
+	
 	return 0;
 }
 	

@@ -61,10 +61,11 @@ namespace useful {
 		const_iterator cend(void) const noexcept { return c.rend(); }
 	};
 	
-	template<typename Container>
+	template<typename Container,
+		class NotConst = typename std::enable_if<!std::is_const<Container>::value>::type> 
 	class reverse_adaptor {
 	public:
-		using container_type = typename std::remove_const<Container>::type;
+		using container_type = Container;
 		using iterator = typename container_type::reverse_iterator;
 		using const_iterator = typename container_type::const_reverse_iterator;
 		using value_type = typename container_type::value_type;
@@ -132,10 +133,11 @@ namespace useful {
 		const_iterator cend(void) const noexcept { return c.cend(); }
 	};
 	
-	template<typename Container>
+	template<typename Container,
+		class NotConst = typename std::enable_if<!std::is_const<Container>::value>::type>
 	class drop_adaptor {
 	public:
-		using container_type = typename std::remove_const<Container>::type;
+		using container_type = Container;
 		using iterator = typename container_type::iterator;
 		using const_iterator = typename container_type::const_iterator;
 		using difference_type = typename container_type::difference_type;
@@ -216,10 +218,11 @@ namespace useful {
 		}
 	};
 	
-	template<typename Container>
+	template<typename Container,
+		class NotConst = typename std::enable_if<!std::is_const<Container>::value>::type>
 	class take_adaptor {
 	public:
-		using container_type = typename std::remove_const<Container>::type;
+		using container_type = Container;
 		using iterator = typename container_type::iterator;
 		using const_iterator = typename container_type::const_iterator;
 		using difference_type = typename container_type::difference_type;
