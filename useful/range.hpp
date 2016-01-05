@@ -54,8 +54,7 @@ namespace useful {
 		container_type &c;
 	
 	public:
-		explicit const_reverse_adaptor(container_type &c_)
-			: c(c_) {}
+		explicit const_reverse_adaptor(container_type &c_) : c(c_) {}
 	
 		const_iterator begin(void) const noexcept { return c.rbegin(); }
 		const_iterator cbegin(void) const noexcept { return c.rbegin(); }
@@ -65,7 +64,7 @@ namespace useful {
 	};
 	
 	template<typename Container,
-		class NotConst = typename std::enable_if<!std::is_const<Container>::value>::type> 
+		typename = typename std::enable_if<!std::is_const<Container>::value>::type> 
 	class reverse_adaptor {
 	public:
 		using container_type = Container;
@@ -77,8 +76,7 @@ namespace useful {
 		container_type &c;
 	
 	public:
-		explicit reverse_adaptor(container_type &c_)
-			: c(c_) {}
+		explicit reverse_adaptor(container_type &c_) : c(c_) {}
 	
 		iterator begin(void) noexcept { return c.rbegin(); }
 		const_iterator begin(void) const noexcept { return c.rbegin(); }
@@ -89,14 +87,17 @@ namespace useful {
 		const_iterator cend(void) const noexcept { return c.rend(); }
 	};
 	
-	template<typename Container,
-		class Const = typename std::enable_if<std::is_const<Container>::value>::type>
-	const_reverse_adaptor<Container> rev(Container &c) {
+	template<typename Container>
+	const_reverse_adaptor<Container> rev(const Container &c) {
 		return const_reverse_adaptor<Container>(c);
 	}
 	
-	template<typename Container,
-		class NotConst = typename std::enable_if<!std::is_const<Container>::value>::type>
+	template<typename Container>
+	const_reverse_adaptor<Container> crev(Container &c) {
+		return const_reverse_adaptor<Container>(c);
+	}
+	
+	template<typename Container>
 	reverse_adaptor<Container> rev(Container &c) {
 		return reverse_adaptor<Container>(c);
 	} 
@@ -119,11 +120,10 @@ namespace useful {
 		difference_type n;
 		
 	public:
-		explicit const_drop_adaptor(container_type &c_, difference_type n_)
-			: c(c_), n(n_) {
+		const_drop_adaptor(container_type &c_, difference_type n_) : c(c_), n(n_) {
 				if (n < 0)
 					n = c.size() + n;
-			}
+		}
 	
 		const_iterator begin(void) const noexcept { return cbegin(); }
 		const_iterator cbegin(void) const noexcept { return std::next(c.cbegin(), n); }
@@ -133,7 +133,7 @@ namespace useful {
 	};
 	
 	template<typename Container,
-		class NotConst = typename std::enable_if<!std::is_const<Container>::value>::type>
+		typename = typename std::enable_if<!std::is_const<Container>::value>::type>
 	class drop_adaptor {
 	public:
 		using container_type = Container;
@@ -147,11 +147,10 @@ namespace useful {
 		difference_type n;
 	
 	public:
-		explicit drop_adaptor(container_type &c_, difference_type n_)
-			: c(c_), n(n_) {
+		drop_adaptor(container_type &c_, difference_type n_) : c(c_), n(n_) {
 				if (n < 0)
 					n = c.size() + n;
-			}
+		}
 	
 		iterator begin(void) noexcept { return std::next(c.begin(), n); }
 		const_iterator begin(void) const noexcept { return cbegin(); }
@@ -162,15 +161,21 @@ namespace useful {
 		const_iterator cend(void) const noexcept { return c.cend(); }
 	};
 	
-	template<typename Container,
-		class Const = typename std::enable_if<std::is_const<Container>::value>::type>
-	const_drop_adaptor<Container> drop(Container &c, typename Container::difference_type n) {
+	template<typename Container>
+	const_drop_adaptor<Container>
+	drop(const Container &c, typename Container::difference_type n) {
 		return const_drop_adaptor<Container>(c, n);
 	}
-	
-	template<typename Container,
-		class NotConst = typename std::enable_if<!std::is_const<Container>::value>::type>
-	drop_adaptor<Container> drop(Container &c, typename Container::difference_type n) {
+
+	template<typename Container>
+	const_drop_adaptor<Container>
+	cdrop(Container &c, typename Container::difference_type n) {
+		return const_drop_adaptor<Container>(c, n);
+	}
+		
+	template<typename Container>
+	drop_adaptor<Container>
+	drop(Container &c, typename Container::difference_type n) {
 		return drop_adaptor<Container>(c, n);
 	} 
 	
@@ -192,8 +197,7 @@ namespace useful {
 		difference_type n;
 		
 	public:
-		explicit const_take_adaptor(container_type &c_, difference_type n_)
-			: c(c_), n(n_) { 
+		const_take_adaptor(container_type &c_, difference_type n_) : c(c_), n(n_) { 
 				if (n < 0)
 					n = c.size() + n;
 		}
@@ -206,7 +210,7 @@ namespace useful {
 	};
 	
 	template<typename Container,
-		class NotConst = typename std::enable_if<!std::is_const<Container>::value>::type>
+		typename = typename std::enable_if<!std::is_const<Container>::value>::type>
 	class take_adaptor {
 	public:
 		using container_type = Container;
@@ -220,8 +224,7 @@ namespace useful {
 		difference_type n;
 	
 	public:
-		explicit take_adaptor(container_type &c_, difference_type n_)
-			: c(c_), n(n_) {
+		take_adaptor(container_type &c_, difference_type n_) : c(c_), n(n_) {
 				if (n < 0)
 					n = c.size() + n;
 		}
@@ -234,18 +237,24 @@ namespace useful {
 		const_iterator end(void) const noexcept { return cend(); }
 		const_iterator cend(void) const noexcept { return std::next(c.cbegin(), n); }
 	};
+
+ template<class Container>
+ const_take_adaptor<Container>
+ take(const Container &c, typename Container::difference_type n) {
+ 	 return const_take_adaptor<Container>(c, n);
+ }
 	
-	template<typename Container,
-		class Const = typename std::enable_if<std::is_const<Container>::value>::type>
-	const_take_adaptor<Container> take(Container &c, typename Container::difference_type n) {
-		return const_take_adaptor<Container>(c, n);
-	}
+ template<class Container>
+ const_take_adaptor<Container>
+ ctake(Container &c, typename Container::difference_type n) {
+ 	 return const_take_adaptor<Container>(c, n);
+ }
 	
-	template<typename Container,
-		class NotConst = typename std::enable_if<!std::is_const<Container>::value>::type>
-	take_adaptor<Container> take(Container &c, typename Container::difference_type n) {
-		return take_adaptor<Container>(c, n);
-	} 
+ template<class Container>
+ take_adaptor<Container>
+ take(Container &c, typename Container::difference_type n) {
+ 	 return take_adaptor<Container>(c, n);
+ } 
 };
 
 #endif
