@@ -22,6 +22,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#ifndef USEFUL_MATH_HPP
+#define USEFUL_MATH_HPP
+
 #include <numeric>
 #include <functional>
 
@@ -62,3 +65,5 @@ namespace useful {
 	}
 	
 };
+
+#endif

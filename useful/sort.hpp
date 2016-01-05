@@ -22,6 +22,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#ifndef USEFUL_SORT_HPP
+#define USEFUL_SORT_HPP
+
 #include <algorithm>
 
 /* Additional sorting algorithms that work on iterator ranges. Of note is that
@@ -67,3 +70,5 @@ namespace useful {
 			std::iter_swap(first, std::min_element(first, last, comp));
 	}
 };
+
+#endif

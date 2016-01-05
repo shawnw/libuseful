@@ -22,6 +22,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#ifndef USEFUL_RANGE_HPP
+#define USEFUL_RANGE_HPP
+
 #include <iterator>
 #include <type_traits>
 
@@ -268,3 +271,5 @@ namespace useful {
 		return take_adaptor<Container>(c, n);
 	} 
 };
+
+#endif
