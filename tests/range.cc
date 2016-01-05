@@ -48,9 +48,6 @@ int main(void) {
 	for (auto i : take(bar, 2))
 		std::cout << i << ',';
 	std::cout << '\n';
-	for (const auto &i : take(bar, 2))
-		std::cout << i << ',';
-	std::cout << '\n';
 	
 	std::cout << "\nTake -2:\n";
 	for (auto i : take(cfoo, -2))

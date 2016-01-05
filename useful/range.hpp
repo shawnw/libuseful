@@ -126,11 +126,7 @@ namespace useful {
 			}
 	
 		const_iterator begin(void) const noexcept { return cbegin(); }
-		const_iterator cbegin(void) const noexcept {
-			auto i = c.cbegin();
-			std::advance(i, n);
-			return i;
-		}
+		const_iterator cbegin(void) const noexcept { return std::next(c.cbegin(), n); }
 
 		const_iterator end(void) const noexcept { return c.cend(); }
 		const_iterator cend(void) const noexcept { return c.cend(); }
@@ -157,17 +153,9 @@ namespace useful {
 					n = c.size() + n;
 			}
 	
-		iterator begin(void) noexcept {
-			auto i = c.begin();
-			std::advance(i, n);
-			return i;
-		}
+		iterator begin(void) noexcept { return std::next(c.begin(), n); }
 		const_iterator begin(void) const noexcept { return cbegin(); }
-		const_iterator cbegin(void) const noexcept {
-			auto i = c.cbegin();
-			std::advance(i, n);
-			return i;
-		}
+		const_iterator cbegin(void) const noexcept { return std::next(c.cbegin(), n); }
 		
 		iterator end(void) noexcept { return c.end(); }
 		const_iterator end(void) const noexcept { return c.cend(); }
@@ -214,11 +202,7 @@ namespace useful {
 		const_iterator cbegin(void) const noexcept { return c.cbegin(); }
 		
 		const_iterator end(void) const noexcept { return cend(); }
-		const_iterator cend(void) const noexcept {
-			auto i = c.cbegin();
-			std::advance(i, n);
-			return i;
-		}
+		const_iterator cend(void) const noexcept { return std::next(c.cbegin(), n); }
 	};
 	
 	template<typename Container,
@@ -246,17 +230,9 @@ namespace useful {
 		const_iterator begin(void) const noexcept { return c.cbegin(); }
 		const_iterator cbegin(void) const noexcept { return c.cbegin(); }
 		
-		iterator end(void) noexcept { 
-			auto i = c.begin();
-			std::advance(i, n);
-			return i;
-		}
+		iterator end(void) noexcept { return std::next(c.begin(), n); }
 		const_iterator end(void) const noexcept { return cend(); }
-		const_iterator cend(void) const noexcept { 
-			auto i = c.cbegin();
-			std::advance(i, n);
-			return i;
-		}
+		const_iterator cend(void) const noexcept { return std::next(c.cbegin(), n); }
 	};
 	
 	template<typename Container,
