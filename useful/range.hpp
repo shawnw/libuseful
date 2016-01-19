@@ -49,6 +49,8 @@ namespace useful {
 		using container_type = typename std::add_const<Container>::type;
 		using const_iterator = typename container_type::const_reverse_iterator;
 		using value_type = typename container_type::value_type;
+		using difference_type = typename container_type::difference_type;
+		using size_type = typename container_type::size_type;
 		
 	private:
 		container_type &c;
@@ -56,6 +58,8 @@ namespace useful {
 	public:
 		explicit const_reverse_adaptor(container_type &c_) : c(c_) {}
 	
+		size_type size(void) const { return c.size(); }
+		
 		const_iterator begin(void) const noexcept { return c.rbegin(); }
 		const_iterator cbegin(void) const noexcept { return c.rbegin(); }
 		
@@ -71,13 +75,17 @@ namespace useful {
 		using iterator = typename container_type::reverse_iterator;
 		using const_iterator = typename container_type::const_reverse_iterator;
 		using value_type = typename container_type::value_type;
+		using difference_type = typename container_type::difference_type;
+		using size_type = typename container_type::size_type;
 		
 	private:
 		container_type &c;
 	
 	public:
 		explicit reverse_adaptor(container_type &c_) : c(c_) {}
-	
+
+		size_type size(void) const { return c.size(); }
+				
 		iterator begin(void) noexcept { return c.rbegin(); }
 		const_iterator begin(void) const noexcept { return c.rbegin(); }
 		const_iterator cbegin(void) const noexcept { return c.rbegin(); }
@@ -114,6 +122,7 @@ namespace useful {
 		using const_iterator = typename container_type::const_iterator;
 		using difference_type = typename container_type::difference_type;
 		using value_type = typename container_type::value_type;
+		using size_type = typename container_type::size_type;
 		
 	private:
 		container_type &c;
@@ -124,7 +133,9 @@ namespace useful {
 				if (n < 0)
 					n = c.size() + n;
 		}
-	
+
+		size_type size(void) const { return c.size(); }
+		
 		const_iterator begin(void) const noexcept { return cbegin(); }
 		const_iterator cbegin(void) const noexcept { return std::next(c.cbegin(), n); }
 
@@ -141,7 +152,8 @@ namespace useful {
 		using const_iterator = typename container_type::const_iterator;
 		using difference_type = typename container_type::difference_type;
 		using value_type = typename container_type::value_type;
-		
+		using size_type = typename container_type::size_type;
+	
 	private:
 		container_type &c;
 		difference_type n;
@@ -151,7 +163,9 @@ namespace useful {
 				if (n < 0)
 					n = c.size() + n;
 		}
-	
+
+		size_type size(void) const { return c.size(); }
+		
 		iterator begin(void) noexcept { return std::next(c.begin(), n); }
 		const_iterator begin(void) const noexcept { return cbegin(); }
 		const_iterator cbegin(void) const noexcept { return std::next(c.cbegin(), n); }
@@ -191,6 +205,7 @@ namespace useful {
 		using const_iterator = typename container_type::const_iterator;
 		using difference_type = typename container_type::difference_type;
 		using value_type = typename container_type::value_type;
+		using size_type = typename container_type::size_type;
 		
 	private:
 		container_type &c;
@@ -201,7 +216,9 @@ namespace useful {
 				if (n < 0)
 					n = c.size() + n;
 		}
-	
+
+		size_type size(void) const { return c.size(); }
+		
 		const_iterator begin(void) const noexcept { return c.cbegin(); }
 		const_iterator cbegin(void) const noexcept { return c.cbegin(); }
 		
@@ -218,6 +235,7 @@ namespace useful {
 		using const_iterator = typename container_type::const_iterator;
 		using difference_type = typename container_type::difference_type;
 		using value_type = typename container_type::value_type;
+		using size_type = typename container_type::size_type;
 		
 	private:
 		container_type &c;
@@ -228,7 +246,9 @@ namespace useful {
 				if (n < 0)
 					n = c.size() + n;
 		}
-	
+
+		size_type size(void) const { return c.size(); }
+		
 		iterator begin(void) noexcept { return c.begin(); }
 		const_iterator begin(void) const noexcept { return c.cbegin(); }
 		const_iterator cbegin(void) const noexcept { return c.cbegin(); }
