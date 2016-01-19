@@ -26,6 +26,9 @@ SOFTWARE.
 #define USEFUL_SORT_HPP
 
 #include <algorithm>
+#include <iterator>
+#include <utility>
+#include <functional>
 
 /* Additional sorting algorithms that work on iterator ranges. Of note is that
  * insertion and selection sort only need forward iterators, so they'll sort
@@ -68,6 +71,47 @@ namespace useful {
 	void selection_sort(ForwardIterator first, ForwardIterator last, Compare comp) {
 		for (; first != last; ++first)
 			std::iter_swap(first, std::min_element(first, last, comp));
+	}
+
+	/* Useful functions for comparing pairs of values. Unlike the standard < for
+	 * pairs, only look at the first or second element. cmp1st and cmp2nd are
+	 * functors that work with std::not2 and a user-specific comparison operator,
+	 * comp1st and comp2nd are functions that use <. Use whichever works better
+	 * for the need.
+	 */
+
+	template<class T1, class T2, class Comp = std::less<T1>>
+	struct cmp1st {
+		using result_type = bool;
+		using first_argument_type = std::pair<T1, T2>;
+		using second_argument_type = std::pair<T1, T2>;
+		Comp c;
+		explicit cmp1st(Comp c_ = Comp()) : c(c_) {}
+		result_type operator()(const first_argument_type &a, const second_argument_type &b) const {
+			return c(a.first, b.first);
+		}
+	};
+	
+	template<class T1, class T2>
+	bool comp1st(const std::pair<T1, T2> &a, const std::pair<T1, T2> &b) {
+		return cmp1st<T1, T2>()(a, b);
+	}
+	
+	template<class T1, class T2, class Comp = std::less<T2>>
+	struct cmp2nd {
+		using result_type = bool;
+		using first_argument_type = std::pair<T1, T2>;
+		using second_argument_type = std::pair<T1, T2>;
+		Comp c;
+		explicit cmp2nd(Comp c_ = Comp()) : c(c_) {}
+		result_type operator()(const first_argument_type &a, const second_argument_type &b) const {
+			return c(a.second, b.second);
+		}	
+	};
+
+	template<class T1, class T2>
+	bool comp2nd(const std::pair<T1, T2> &a, const std::pair<T1, T2> &b) {
+		return cmp2nd<T1, T2>()(a, b);
 	}
 };
 
