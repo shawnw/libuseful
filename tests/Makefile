@@ -14,6 +14,9 @@ range: range.cc
 sort: sort.cc
 	$(CXX) $(CXXFLAGS) -o sort sort.cc
 	
+split: split.cc
+	$(CXX) $(CXXFLAGS) -o split split.cc
+	
 wordcount: wordcount.cc
 	$(CXX) $(CXXFLAGS) -o wordcount wordcount.cc
 	
