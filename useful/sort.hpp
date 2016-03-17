@@ -73,6 +73,37 @@ namespace useful {
 			std::iter_swap(first, std::min_element(first, last, comp));
 	}
 
+	template<class BidirectionalIterator, class Compare>
+	void merge_sort(BidirectionalIterator first, BidirectionalIterator last, Compare comp) {
+		auto length = std::distance(first, last);
+		bool isodd = length % 2;
+		BidirectionalIterator mlast = last;
+		if (isodd) {
+			length -= 1;
+			--mlast;
+		}
+		for (int s = 1; s <= length / 2; s += s) {
+			BidirectionalIterator s1s = first;
+			BidirectionalIterator s1e = s1s, s2e = s1s;
+			while (std::distance(first, s1s) + s + s <= length) {
+				std::advance(s1e, s);
+				std::advance(s2e, s + s);
+				std::inplace_merge(s1s, s1e, s2e, comp);
+				s1s = s1e = s2e;
+			}
+			if (std::distance(first, s1s) + s <= length) 
+				std::inplace_merge(first, s1s, mlast);
+		}
+		if (isodd)
+			std::inplace_merge(first, mlast, last, comp);
+	}
+	
+	template<class BidirectionalIterator>
+	void merge_sort(BidirectionalIterator first, BidirectionalIterator last) {
+		using value_type = typename std::iterator_traits<BidirectionalIterator>::value_type;
+		merge_sort(first, last, std::less<value_type>());
+	}
+	
 	/* Useful functions for comparing pairs of values. Unlike the standard < for
 	 * pairs, only look at the first or second element. cmp1st and cmp2nd are
 	 * functors that work with std::not2 and a user-specific comparison operator,
