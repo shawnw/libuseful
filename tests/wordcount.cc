@@ -4,6 +4,7 @@
 #include <map>
 #include <vector>
 #include <functional>
+#include <algorithm>
 
 #include <useful/sort.hpp>
 #include <useful/range.hpp>
