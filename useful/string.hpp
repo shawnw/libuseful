@@ -29,7 +29,7 @@ SOFTWARE.
 #include <regex>
 
 namespace useful {
-
+	
 	// perl style split on regular expression functions.
 	template<class OutputIterator>
 	int split(const std::string &s, const std::regex &re, OutputIterator o) {
@@ -43,13 +43,8 @@ namespace useful {
 	 return n;
 	}
 	
-	template<class OutputIterator>
-	int split(const std::string &s, const std::string &re, OutputIterator o) {
-		return split(s, std::regex(re), o);
-	}
-	
-	template<class OutputIterator>
-	int split(const std::string &s, const char *re, OutputIterator o) {
+	template<class OutputIterator, class T>
+	int split(const std::string &s, const T &re, OutputIterator o) {
 		return split(s, std::regex(re), o);
 	}
 	
