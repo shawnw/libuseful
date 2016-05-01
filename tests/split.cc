@@ -13,7 +13,10 @@ int main(void) {
   std::cout << "The string had " << words << " words.\n";
   
   std::string test2 = "this is the string the test is done on.";
-  words = useful::split(test2, "the", std::ostream_iterator<std::string>(std::cout, "\n"));
+  auto wordv = useful::splitv(test2, "the");
+  
+  for (auto &w : wordv)
+  	std::cout << w << '\n';
   
   return 0;
 } 

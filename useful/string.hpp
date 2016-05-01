@@ -53,6 +53,22 @@ namespace useful {
 		const static std::regex whitespace{"\\s+"};
 	 return split(s, whitespace, o);
 	}
+	
+	std::vector<std::string> splitv(const std::string &s, const std::regex &re) {
+		std::regex_token_iterator<std::string::const_iterator> rend{},
+			ri{s.begin(), s.end(), re, -1};
+		return std::vector<std::string>(ri, rend);
+	}
+	
+	template<class T>
+	std::vector<std::string> splitv(const std::string &s, const T &re) {
+		return splitv(s, std::regex(re));
+	}
+	
+	std::vector<std::string> splitv(const std::string &s) {
+		const static std::regex whitespace{"\\s+"};
+	 return splitv(s, whitespace);
+	}
 };
 
 #endif
