@@ -52,7 +52,7 @@ namespace useful {
         if (count == 0) {
           cond.notify_all();
         } else {
-          cond.wait(guard, [this]{ return count == 0; });
+          cond.wait(guard, [this]{ return count <= 0; });
           count = -1;
         }
         return true;
@@ -71,7 +71,6 @@ namespace useful {
     }
   };
 
-
   /* Spin lock using std::atomic_flag, usable with std::lock_guard etc. */
   class spin_lock {
   private:
@@ -84,10 +83,28 @@ namespace useful {
     bool try_lock() {
       return !lock_.test_and_set(std::memory_order_acquire);
     }    
-    void unlock() noexcept {
+    void unlock() {
       lock_.clear(std::memory_order_release);
     }
   };
+
+  /* Ticket lock, see https://en.wikipedia.org/wiki/Ticket_lock */
+  class ticket_lock {
+  private:
+    std::atomic_uint current_ticket{0};
+    std::atomic_uint next_ticket{0};
+  public:
+    void lock() {
+      unsigned int this_ticket = next_ticket++;
+      auto saved_ticket = this_ticket;
+      while (!current_ticket.compare_exchange_weak(this_ticket, saved_ticket,
+                                                   std::memory_order_acq_rel))
+        this_ticket = saved_ticket;
+    }
+    void unlock() {
+      current_ticket.fetch_add(1, std::memory_order_acq_rel);
+    }
+  };  
 };
 
 
