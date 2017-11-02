@@ -91,18 +91,17 @@ namespace useful {
   /* Ticket lock, see https://en.wikipedia.org/wiki/Ticket_lock */
   class ticket_lock {
   private:
-    std::atomic_uint current_ticket{0};
-    std::atomic_uint next_ticket{0};
+    using itype = unsigned int;
+    std::atomic<itype> current_ticket{0};
+    std::atomic<itype> next_ticket{0};
   public:
     void lock() {
-      unsigned int this_ticket = next_ticket++;
-      auto saved_ticket = this_ticket;
-      while (!current_ticket.compare_exchange_weak(this_ticket, saved_ticket,
-                                                   std::memory_order_acq_rel))
-        this_ticket = saved_ticket;
+      itype this_ticket = next_ticket.fetch_add(1, std::memory_order_relaxed);
+      while (current_ticket.load(std::memory_order_acquire) != this_ticket)
+        ;
     }
     void unlock() {
-      current_ticket.fetch_add(1, std::memory_order_acq_rel);
+      current_ticket.fetch_add(1, std::memory_order_release);
     }
   };  
 };
