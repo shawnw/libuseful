@@ -42,7 +42,11 @@ namespace useful {
 
   public:
     explicit barrier(int c = -1) : count(c), m(), cond() {}
-
+    barrier(const barrier &) = delete;
+    barrier(const barrier &&) = delete;
+    barrier& operator=(const barrier &) = delete;
+    barrier& operator=(const barrier &&) = delete;
+    
     // Returns false if the barrier has already been passed by other threads.
     bool at() {
       std::unique_lock<std::mutex> guard(m);
@@ -71,11 +75,17 @@ namespace useful {
     }
   };
 
-  /* Spin lock using std::atomic_flag, usable with std::lock_guard etc. */
+  /* Spin lock using std::atomic_flag, usable with std::lock_guard
+     etc. Satisfies Mutex concept */
   class spin_lock {
   private:
     std::atomic_flag lock_ = ATOMIC_FLAG_INIT;
   public:
+    spin_lock(const spin_lock &) = delete;
+    spin_lock(const spin_lock &&) = delete;
+    spin_lock& operator=(const spin_lock &) = delete;
+    spin_lock& operator=(const spin_lock &&) = delete;
+    
     void lock() {
       while (lock_.test_and_set(std::memory_order_acquire))
         ;
@@ -88,13 +98,19 @@ namespace useful {
     }
   };
 
-  /* Ticket lock, see https://en.wikipedia.org/wiki/Ticket_lock */
+  /* Ticket lock, see https://en.wikipedia.org/wiki/Ticket_lock
+     Satisfies BasicLockable concept. */
   class ticket_lock {
   private:
     using itype = unsigned int;
     std::atomic<itype> current_ticket{0};
     std::atomic<itype> next_ticket{0};
   public:
+    ticket_lock(const ticket_lock &) = delete;
+    ticket_lock(const ticket_lock &&) = delete;
+    ticket_lock& operator=(const ticket_lock &) = delete;
+    ticket_lock& operator=(const ticket_lock &&) = delete;
+    
     void lock() {
       itype this_ticket = next_ticket.fetch_add(1, std::memory_order_relaxed);
       while (current_ticket.load(std::memory_order_acquire) != this_ticket)
